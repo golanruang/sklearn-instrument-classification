@@ -1,19 +1,39 @@
 import librosa
-import os
+import librosa.display
+# from os import listdir
+# from os.path import isfile, join
+# import os
 
-for file in os.listdir()
-# 1. Get the file path to an included audio example
-filename = librosa.example('bass_electronic_018-022-100.wav')
+import matplotlib.pyplot as plt
+import numpy as np
 
+import cv2
 
-# 2. Load the audio as a waveform `y`
-#    Store the sampling rate as `sr`
-y, sr = librosa.load(filename)
+# home = os.path.expanduser("~")
+# path = input('Enter path: ')                         # input for path that audio files/this file are in
+# path = home + '/' + 'Documents/sklearn-instrument-classification/nsynth-test/audio'
 
-# 3. Run the default beat tracker
-tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
+# files=[]
+# for f in os.listdir(path):                          # for every file in the path given
+# index=f.rfind('.')
+# newname=f[:index]
 
-print('Estimated tempo: {:.2f} beats per minute'.format(tempo))
+y, sr = librosa.load('nsynth-test/audio/string_acoustic_012-042-050.wav')
+S=librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128, fmax=8000)
 
-# 4. Convert the frame indices of beat events into timestamps
-beat_times = librosa.frames_to_time(beat_frames, sr=sr)
+fig, ax = plt.subplots()
+
+S_dB = librosa.power_to_db(S, ref=np.max)
+
+# img = librosa.display.specshow(S_dB, x_axis='time', y_axis='mel', sr=sr, fmax=8000, ax=ax)
+
+plt.matshow(S_dB)
+
+img=np.array(S_dB) * 255
+
+#plt.show()
+
+cv2.imwrite('./images/string_acoustic_012-042-050.png', img)
+    # fig.colorbar(img, ax=ax, format='%+2.0f dB')
+    #
+    # ax.set(title='Mel-frequency spectrogram')
