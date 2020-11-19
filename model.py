@@ -1,13 +1,18 @@
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.svm import SVC
+from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import Pipeline
+from sklearn.datasets import make_classification
 
 import librosa
 import librosa.display
+
 from os import listdir
 from os.path import isfile, join, expanduser
 import os
-
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,7 +30,7 @@ def getGraphs():
     for file in os.listdir(path):
         if ".png" not in file:
             continue
-        print(file)
+        #print(file)
         img=cv2.imread("images/"+file,0)
         image=img.flatten()
         graphs.append(image)
@@ -56,8 +61,29 @@ def main():
 
     print(f"Correct: {correct}, Incorrect: {incorrect}, % Correct: {correct/(correct + incorrect)}")
 
-    plot_confusion_matrix(classifier, testX, testY)
-    pyplot.show()
+    #plot_confusion_matrix(classifier, testX, testY)
+    #plt.show()
+
+    pipe = Pipeline([('scaler', StandardScaler()), ('svc', SVC())])
+
+    pipe.fit(trainX, trainY)
+
+    # classifier = SVC(max_iter=10000)
+    # classifier.fit(trainX,trainY)
+    preds = pipe.predict(testX)
+
+    correct = 0
+    incorrect = 0
+    for pred, gt in zip(preds, testY):
+        if pred == gt:
+            correct += 1
+        else:
+            incorrect += 1
+
+    print(f"After Standard Scaler\nCorrect: {correct}, Incorrect: {incorrect}, % Correct: {correct/(correct + incorrect)}")
+
+    plot_confusion_matrix(pipe, testX, testY)
+    #plt.show()
 
 
 main()
