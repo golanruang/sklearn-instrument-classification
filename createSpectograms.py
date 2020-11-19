@@ -33,6 +33,9 @@ for f in os.listdir(path):                          # for every file in the path
 
     cv2.imwrite('./images/' + newname + '.png', img)
     print("img written")
+    # find datatype of the np array
+    # uint8 and int8 multiply by -1
+    # if float (0-1) --> 1-np.array(S_dB)
     # fig.colorbar(img, ax=ax, format='%+2.0f dB')
 
     # ax.set(title='Mel-frequency spectrogram')
