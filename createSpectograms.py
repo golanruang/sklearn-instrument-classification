@@ -28,8 +28,7 @@ for f in os.listdir(path):                          # for every file in the path
     #plt.matshow(S_dB)
 
     img=np.array(S_dB) * -1
-
-#plt.show()
+    # collects data in decibels (negative) --> multiply it by -1 since color can't be negative
 
     cv2.imwrite('./images/' + newname + '.png', img)
     print("img written")

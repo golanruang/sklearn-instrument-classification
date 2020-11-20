@@ -22,6 +22,12 @@ import cv2
 # numpy.reshape()
 # should be uint8
 
+# Fourier transform transforms signal into sine waves that when you add it together you get the signal
+# y axis is frequency
+# x axis is time
+# MEL spectrogram -->
+# amplitude of each sine wave is the hue
+
 def getGraphs():
     home = expanduser("~")
     path = home + '/' + 'Documents/sklearn-instrument-classification/images'
@@ -47,6 +53,12 @@ def main():
     trainX, testX, trainY, testY = train_test_split(
     graphs, labels, test_size=0.3, shuffle=True
     )
+
+    # SVMs work by taking some features and using this features to define the model
+    # usually the model doesn't process these features
+    # somehow the model is doing the analysis?
+    # it tries to find a line that separates the data
+
     classifier = SVC(max_iter=10000)
     classifier.fit(trainX,trainY)
     preds = classifier.predict(testX)
@@ -64,6 +76,8 @@ def main():
     #plot_confusion_matrix(classifier, testX, testY)
     #plt.show()
 
+    # usually used for removing outliers (image noise)
+    # there's no noise because this is a spectrogram so the scaler really isn't doing anything
     pipe = Pipeline([('scaler', StandardScaler()), ('svc', SVC())])
 
     pipe.fit(trainX, trainY)
